@@ -20,31 +20,42 @@ new Vue({
 	data: {
       user: "",
       mail: "",
-      password: ""
-
+      password: "",
+      regions: "espana",
+      message: "",
+      passwordErrors: [
+         "12345",
+         "admin",
+         "password"
+      ],
+      checkedInfo: false,
+      mailRequiredCharacter: "@"
    },
-   methods: {
-      errors: function() {
-         const maxLength = 10;
-         var errorUser = document.getElementById("warning-name-too-long");
-         var errorPassword = document.getElementById("warning-name-too-short");
-       
-         if (this.user.length > maxLength) {
-            return errorUser.style.display = "block";  
+   watch: {
+      password(newPass) {
+         if(this.passwordErrors.indexOf(newPass) > -1) {
+            this.message = "La contraseña no pude ser: '12345', 'admin' o 'password'";
+            return false;
          }
-
-         if (this.password.length < maxLength) {
-            return errorPassword.style.display = "block"; 
+         if(newPass.length < 8) {
+            this.message = "La contraseña debe tener el menos 8 caracteres";
+            return false;
+         }
+         this.message = null;
+      },
+      mail(newEmail) {
+         if(newEmail.includes(this.mailRequiredCharacter)) {
+            this.message = null;
+         } else {
+            this.message = "Introduce un mail con el carácter @";
          }
       },
-      notSendForm: function() {
-         if(this.user.length > maxLength && this.password.length < maxLength) {
-            returnToPreviousPage();
-            console.log(meeec)
+      user(userName) {
+         if(userName.length > 10) {
+            this.message = "El numbre de usuario no puede superar los 10 caracteres";
             return false;
-           
          }
-      }         
+      }  
    }
 })
 
